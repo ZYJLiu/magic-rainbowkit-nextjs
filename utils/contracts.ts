@@ -1,9 +1,6 @@
 import { Networks } from "./networks"
 import { magicTestTokenAbi, nftAbi, storageContractAbi } from "./contract-abis"
-
-// todo fix: can't use magic context in utils
-import { useMagicContext } from "@/context/magic-context"
-const { web3 } = useMagicContext()
+import Web3 from "web3"
 
 const getStorageContractAddress = () => {
   const network = localStorage.getItem("network")
@@ -17,8 +14,7 @@ const getStorageContractAddress = () => {
   }
 }
 
-export const getStorageContract = () => {
-  if (!web3) return null
+export const getStorageContract = (web3: Web3) => {
   const contractAddress = getStorageContractAddress()
   return new web3.eth.Contract(storageContractAbi, contractAddress)
 }
@@ -35,8 +31,7 @@ const getNftContractAddress = () => {
   }
 }
 
-export const getNftContract = () => {
-  if (!web3) return null
+export const getNftContract = (web3: Web3) => {
   const contractAddress = getNftContractAddress()
   return new web3.eth.Contract(nftAbi, contractAddress)
 }
@@ -53,8 +48,7 @@ const getTokenContractAddress = () => {
   }
 }
 
-export const getTestTokenContract = () => {
-  if (!web3) return null
+export const getTestTokenContract = (web3: Web3) => {
   const contractAddress = getTokenContractAddress()
   return new web3.eth.Contract(magicTestTokenAbi, contractAddress)
 }

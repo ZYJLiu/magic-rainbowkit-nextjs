@@ -3,6 +3,7 @@ import AppHeader from "../app-header"
 import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
 import SigningMethods from "../signing"
+import SmartContracts from "../contracts"
 import Links from "../links"
 import Spacer from "../ui/spacer"
 import HomePageBackground from "public/main.svg"
@@ -28,6 +29,7 @@ export default function Home({ setAccount }: Props) {
         <Wallet setAccount={setAccount} />
         <WalletMethods setAccount={setAccount} />
         <SigningMethods />
+        <SmartContracts />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />
