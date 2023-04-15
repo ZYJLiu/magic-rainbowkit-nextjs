@@ -43,7 +43,7 @@ const GetWalletInfo = () => {
         )}
       </button>
       <div className="wallet-method-desc">
-        Returns information about the logged in user's wallet.
+        Returns information about the logged in user&apos;s wallet.
       </div>
       {showToast ? <Toast>Wallet type: {walletType}</Toast> : null}
     </div>
