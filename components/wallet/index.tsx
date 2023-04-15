@@ -64,7 +64,7 @@ const UserInfo = ({ setAccount }: Props) => {
     setTimeout(() => {
       setIsRefreshing(false)
     }, 500)
-  }, [])
+  }, [web3])
 
   return (
     <Card>

@@ -29,7 +29,7 @@ const TokenBalance = () => {
     setTimeout(() => {
       setIsRefreshing(false)
     }, 500)
-  }, [])
+  }, [web3])
 
   return (
     <div>

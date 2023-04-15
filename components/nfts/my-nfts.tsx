@@ -91,7 +91,7 @@ const MyNfts = () => {
     setTimeout(() => {
       setIsRefreshing(false)
     }, 500)
-  }, [])
+  }, [web3])
 
   return (
     <div>
