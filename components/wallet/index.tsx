@@ -11,21 +11,19 @@ import Image from "next/image"
 
 // import { web3 } from "../../libs/web3"
 import Web3 from "web3"
+import { useMagicContext } from "@/context/magic-context"
 
 interface Props {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const UserInfo = ({ setAccount }: Props) => {
-  const magic = useMagic()
+  const { magic, selectedNetwork } = useMagicContext()
+  useMagic()
+  // console.log("MAGIC: ", magic)
+  // console.log("SELECTED: ", selectedNetwork)
 
   const [web3, setWeb3] = useState<Web3>()
-
-  useEffect(() => {
-    if (magic) {
-      setWeb3(new Web3((magic as any).rpcProvider))
-    }
-  }, [magic])
 
   const [balance, setBalance] = useState("...")
   const [copied, setCopied] = useState("Copy")
@@ -34,6 +32,13 @@ const UserInfo = ({ setAccount }: Props) => {
   const publicAddress = localStorage.getItem("user")
   const network = localStorage.getItem("network")
   const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
+
+  useEffect(() => {
+    if (magic) {
+      setWeb3(new Web3((magic as any).rpcProvider))
+    }
+    // console.log("MAGIC: ", magic)
+  }, [magic])
 
   const disconnect = async () => {
     if (magic) {
@@ -57,12 +62,13 @@ const UserInfo = ({ setAccount }: Props) => {
     if (publicAddress && web3) {
       const balance = await web3.eth.getBalance(publicAddress)
       setBalance(web3.utils.fromWei(balance))
+      console.log("BALANCE: ", balance)
     }
   }
 
   useEffect(() => {
     getBalance()
-  }, [])
+  }, [web3])
 
   return (
     <Card>

@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import { EthNetworkConfiguration, Magic } from "magic-sdk"
 import { Networks } from "../utils/networks"
 import useLocalStorage from "../utils/useLocalStorage"
+import { useMagicContext } from "../context/magic-context"
 
 export const useMagic = () => {
-  const [magic, setMagic] = useState<Magic | null>(null)
-  const [network, setNetwork] = useLocalStorage("network")
+  const { magic, setMagicInstance, selectedNetwork } = useMagicContext()
+  // const [network] = useLocalStorage("network")
 
   const formattedNetwork = (): EthNetworkConfiguration => {
-    switch (network) {
+    switch (selectedNetwork) {
       case Networks.Optimism:
         return {
           rpcUrl: process.env.NEXT_PUBLIC_OPTIMISM_RPC_URL as string,
@@ -29,13 +30,14 @@ export const useMagic = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setMagic(
+      setMagicInstance(
         new Magic(process.env.NEXT_PUBLIC_MAGIC_API_KEY as string, {
           network: formattedNetwork(),
         })
       )
     }
-  }, [network])
+    console.log("SELECTED NETWORK", selectedNetwork)
+  }, [selectedNetwork])
 
-  return magic
+  // return magic
 }

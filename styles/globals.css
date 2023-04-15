@@ -163,13 +163,13 @@ ul {
   position: relative;
   background-size: 100vw 320px;
   background-repeat: no-repeat;
-  background-image: url("./images/main.svg");
+  background-image: url("/main.svg");
 }
 
 .login-page {
   min-height: 100vh;
   background-size: "100% auto";
-  background-image: url("./images/login.svg");
+  background-image: url("/login.svg");
 }
 
 .connect-button {

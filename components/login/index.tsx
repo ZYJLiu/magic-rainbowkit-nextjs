@@ -6,6 +6,7 @@ import ConnectButton from "../ui/connect-button"
 import Spacer from "../ui/spacer"
 import LoginPageBackground from "public/login.svg"
 import { useMagic } from "../../libs/magic"
+import { useMagicContext } from "@/context/magic-context"
 
 interface Props {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>
@@ -13,7 +14,8 @@ interface Props {
 
 const Login = ({ setAccount }: Props) => {
   const [disabled, setDisabled] = useState(false)
-  const magic = useMagic()
+  const { magic } = useMagicContext()
+  useMagic()
 
   const connect = async () => {
     try {

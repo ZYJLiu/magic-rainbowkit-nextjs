@@ -4,6 +4,7 @@ import Check from "public/check.svg"
 import { Networks } from "../../utils/networks"
 import Image from "next/image"
 import useLocalStorage from "../../utils/useLocalStorage"
+import { useMagicContext } from "@/context/magic-context"
 
 const Network = () => {
   const networkOptions = [
@@ -13,6 +14,7 @@ const Network = () => {
   ]
   const [isOpen, setIsOpen] = useState(false)
   const [network, setNetwork] = useState("")
+  const { setSelectedNetwork } = useMagicContext()
 
   useEffect(() => {
     setNetwork(localStorage.getItem("network") || Networks.Ethereum)
@@ -22,7 +24,9 @@ const Network = () => {
     if (networkOption !== network) {
       setNetwork(networkOption)
       localStorage.setItem("network", networkOption)
-      window.location.reload()
+      setSelectedNetwork(networkOption)
+      console.log("LOCAL: ", localStorage.getItem("network"))
+      // window.location.reload()
     }
   }
 
