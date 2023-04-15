@@ -27,7 +27,7 @@ export default function Home({ setAccount }: Props) {
         <Spacer size={285} />
         <Wallet setAccount={setAccount} />
         <WalletMethods setAccount={setAccount} />
-        {/* <SigningMethods /> */}
+        <SigningMethods />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />

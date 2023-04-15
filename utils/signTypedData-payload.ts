@@ -35,7 +35,13 @@ export const signTypedDataV3Payload = {
 }
 
 const getChainId = () => {
+  if (typeof window === "undefined") {
+    // We are in a server-side rendering environment, return a default value
+    return 5 // Default to the Goerli testnet (you can change this to any default value you need)
+  }
+
   const network = localStorage.getItem("network")
+  console.log("test", network)
   switch (network) {
     case Networks.Polygon:
       return 80001
