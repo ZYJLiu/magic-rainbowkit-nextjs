@@ -4,7 +4,7 @@ import AppHeader from "../app-header"
 import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
 import SigningMethods from "../signing"
-// import SendTransaction from "../send-transaction"
+import SendTransaction from "../send-transaction"
 import Erc20Tokens from "../erc20-tokens"
 import SmartContracts from "../contracts"
 import NFTs from "../nfts"
@@ -35,6 +35,7 @@ export default function Home({ setAccount }: Props) {
         <SmartContracts />
         <NFTs />
         <Erc20Tokens />
+        <SendTransaction />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />
