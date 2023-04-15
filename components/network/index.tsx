@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import DownArrow from "public/down-arrow.svg"
 import Check from "public/check.svg"
 import { Networks } from "../../utils/networks"
@@ -14,12 +14,16 @@ const Network = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { selectedNetwork, updateMagicInstance } = useMagicContext()
 
-  const handleNetworkSelected = (networkOption: Networks) => {
-    if (networkOption !== selectedNetwork) {
-      localStorage.setItem("network", networkOption)
-      updateMagicInstance(networkOption)
-    }
-  }
+  const handleNetworkSelected = useCallback(
+    (networkOption: Networks) => {
+      if (networkOption !== selectedNetwork) {
+        localStorage.setItem("network", networkOption)
+        updateMagicInstance(networkOption)
+        console.log("SELECTED NETWORK: ", networkOption)
+      }
+    },
+    [selectedNetwork]
+  )
 
   const toggleDropdown = () => setIsOpen(!isOpen)
 

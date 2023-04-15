@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Image from "next/image"
 import Loading from "public/loading.svg"
 import CardLabel from "../ui/card-label"
@@ -12,16 +12,24 @@ const TokenBalance = () => {
   const publicAddress = localStorage.getItem("user")
   const contract = getTestTokenContract(web3!)
 
-  const getTestTokenBalance = async () => {
+  useEffect(() => {
+    refreshBalance()
+  }, [web3])
+
+  const getTestTokenBalance = useCallback(async () => {
     if (!isRefreshing && web3) {
       const balance = await contract.methods.balanceOf(publicAddress).call()
       setBalance(web3.utils.fromWei(balance))
     }
-  }
-
-  useEffect(() => {
-    getTestTokenBalance()
   }, [web3])
+
+  const refreshBalance = useCallback(async () => {
+    setIsRefreshing(true)
+    await getTestTokenBalance()
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 500)
+  }, [])
 
   return (
     <div>
@@ -34,17 +42,7 @@ const TokenBalance = () => {
               <Image className="loading" alt="loading" src={Loading} />
             </div>
           ) : (
-            <div
-              onClick={() => {
-                setIsRefreshing(true)
-                setTimeout(() => {
-                  setIsRefreshing(false)
-                }, 500)
-                getTestTokenBalance()
-              }}
-            >
-              Refresh
-            </div>
+            <div onClick={refreshBalance}>Refresh</div>
           )
         }
       />

@@ -15,7 +15,7 @@ const Login = ({ setAccount }: Props) => {
   const [disabled, setDisabled] = useState(false)
   const { magic } = useMagicContext()
 
-  const connect = async () => {
+  const connect = useCallback(async () => {
     if (!magic) return
     try {
       setDisabled(true)
@@ -28,7 +28,7 @@ const Login = ({ setAccount }: Props) => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [magic])
 
   return (
     <div

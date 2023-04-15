@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
 import ErrorText from "../ui/error"
 import Spacer from "../ui/spacer"
@@ -10,7 +10,7 @@ const ShowUI = () => {
   const [disabled, setDisabled] = useState(false)
   const [showUIError, setShowUIError] = useState(false)
 
-  const showUI = async () => {
+  const showUI = useCallback(async () => {
     if (!magic) return
     try {
       setShowUIError(false)
@@ -25,7 +25,7 @@ const ShowUI = () => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [magic])
 
   return (
     <div className="wallet-method-container">

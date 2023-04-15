@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import Loading from "public/loading.svg"
 import nftImageOne from "public/nft-one.svg"
@@ -47,6 +47,17 @@ const MyNfts = () => {
   const contract = getNftContract(web3!)
   const publicAddress = localStorage.getItem("user")
 
+  useEffect(() => {
+    refresh()
+  }, [web3])
+
+  useEffect(() => {
+    console.log("nftData", nftData)
+    if (!nftData) {
+      getOwnedNfts()
+    }
+  }, [])
+
   const formatNftMetadata = (nftIds: string[], tokenURIs: string[]) => {
     return nftIds.map((nftId: string, i: number) => {
       return {
@@ -56,7 +67,7 @@ const MyNfts = () => {
     })
   }
 
-  const getOwnedNfts = async () => {
+  const getOwnedNfts = useCallback(async () => {
     if (!isRefreshing) {
       try {
         const nftIds = await contract.methods
@@ -72,12 +83,14 @@ const MyNfts = () => {
         console.error(error)
       }
     }
-  }
+  }, [web3])
 
-  useEffect(() => {
-    if (!nftData) {
-      getOwnedNfts()
-    }
+  const refresh = useCallback(async () => {
+    setIsRefreshing(true)
+    await getOwnedNfts()
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 500)
   }, [])
 
   return (
@@ -91,17 +104,7 @@ const MyNfts = () => {
               <Image className="loading" alt="loading" src={Loading} />
             </div>
           ) : (
-            <div
-              onClick={() => {
-                setIsRefreshing(true)
-                setTimeout(() => {
-                  setIsRefreshing(false)
-                }, 500)
-                getOwnedNfts()
-              }}
-            >
-              Refresh
-            </div>
+            <div onClick={refresh}>Refresh</div>
           )
         }
       />

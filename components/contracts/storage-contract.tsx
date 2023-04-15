@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import Divider from "../ui/divider"
 import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
@@ -16,17 +16,21 @@ const StorageContract = () => {
   const publicAddress = localStorage.getItem("user")
   const contract = getStorageContract(web3!)
 
-  const getStoredNumber = async () => {
-    const number = await contract.methods.number().call()
-    setStoredNumber(number)
-  }
-
   useEffect(() => {
     setDisabled(!newNumber)
     setNewNumberError(false)
   }, [newNumber])
 
-  const updateNumber = () => {
+  useEffect(() => {
+    getStoredNumber()
+  }, [web3])
+
+  const getStoredNumber = useCallback(async () => {
+    const number = await contract.methods.number().call()
+    setStoredNumber(number)
+  }, [web3])
+
+  const updateNumber = useCallback(() => {
     if (isNaN(Number(newNumber))) return setNewNumberError(true)
     setDisabled(true)
     contract.methods
@@ -45,10 +49,6 @@ const StorageContract = () => {
         console.error(error)
         setDisabled(false)
       })
-  }
-
-  useEffect(() => {
-    getStoredNumber()
   }, [web3])
 
   return (

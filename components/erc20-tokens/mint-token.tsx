@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useCallback } from "react"
 import FormButton from "../ui/form-button"
 import { getTestTokenContract } from "../../utils/contracts"
 import { useMagicContext } from "@/context/magic-context"
@@ -9,7 +9,7 @@ const MintToken = () => {
   const [disabled, setDisabled] = useState(false)
   const contract = getTestTokenContract(web3!)
 
-  const mintTestTokens = () => {
+  const mintTestTokens = useCallback(() => {
     setDisabled(true)
     contract.methods
       .mint(web3?.utils.toWei("10"))
@@ -25,7 +25,7 @@ const MintToken = () => {
         setDisabled(false)
         console.error(error)
       })
-  }
+  }, [web3])
 
   return (
     <FormButton onClick={mintTestTokens} disabled={disabled}>

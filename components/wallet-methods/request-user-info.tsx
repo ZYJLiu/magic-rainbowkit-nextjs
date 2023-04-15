@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
 import Toast from "../ui/toast"
 import { useMagicContext } from "@/context/magic-context"
@@ -10,7 +10,7 @@ const RequestUserInfo = () => {
   const [showToast, setShowToast] = useState(false)
   const [email, setEmail] = useState<string | undefined>("")
 
-  const requestUserInfo = async () => {
+  const requestUserInfo = useCallback(async () => {
     if (!magic) return
     try {
       setDisabled(true)
@@ -25,7 +25,7 @@ const RequestUserInfo = () => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [magic])
 
   return (
     <div className="wallet-method-container">

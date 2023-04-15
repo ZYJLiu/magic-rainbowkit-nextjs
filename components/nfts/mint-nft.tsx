@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
@@ -16,7 +16,7 @@ const MintNft = () => {
     setDisabled(!name)
   }, [name])
 
-  const mintNFT = async () => {
+  const mintNFT = useCallback(async () => {
     try {
       setDisabled(true)
       const gas = await contract.methods
@@ -43,7 +43,7 @@ const MintNft = () => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [web3])
 
   return (
     <div>

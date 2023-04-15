@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
 function useHeadingObserver() {
   const observer = useRef()
   const [activeId, setActiveId] = useState("")
+
   useEffect(() => {
     const handleObserver = (entries: any) => {
       entries.forEach((entry: any) => {
@@ -27,6 +28,13 @@ const TableOfContents = () => {
   const [headings, setHeadings] = useState<any>([])
   const { activeId } = useHeadingObserver()
 
+  const handleScroll = useCallback(() => {
+    const bottom =
+      Math.ceil(window.innerHeight + window.scrollY) >=
+      document.documentElement.scrollHeight
+    setIsBottomOfPage(bottom)
+  }, [])
+
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll("h1")).map(
       (elem) => ({
@@ -36,15 +44,7 @@ const TableOfContents = () => {
       })
     )
     setHeadings(elements)
-  }, [])
 
-  const handleScroll = () => {
-    const bottom =
-      Math.ceil(window.innerHeight + window.scrollY) >=
-      document.documentElement.scrollHeight
-    setIsBottomOfPage(!!bottom)
-  }
-  useEffect(() => {
     window.addEventListener("scroll", handleScroll, {
       passive: true,
     })

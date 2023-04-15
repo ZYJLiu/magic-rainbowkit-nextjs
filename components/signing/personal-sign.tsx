@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Buffer } from "buffer"
 import { recoverPersonalSignature } from "@metamask/eth-sig-util"
 import FormButton from "../ui/form-button"
@@ -17,7 +17,7 @@ const PersonalSign = () => {
     setDisabled(!message)
   }, [message])
 
-  const personalSign = async () => {
+  const personalSign = useCallback(async () => {
     try {
       if (publicAddress && web3) {
         setDisabled(true)
@@ -44,7 +44,7 @@ const PersonalSign = () => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [web3])
 
   return (
     <div>

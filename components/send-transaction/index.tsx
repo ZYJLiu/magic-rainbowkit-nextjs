@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import Divider from "../ui/divider"
 import FormButton from "../ui/form-button"
@@ -31,7 +31,7 @@ const SendTransaction = () => {
     setToAddressError(false)
   }, [amount, toAddress])
 
-  const sendTransaction = () => {
+  const sendTransaction = useCallback(() => {
     if (!web3?.utils.isAddress(toAddress)) {
       return setToAddressError(true)
     }
@@ -60,7 +60,7 @@ const SendTransaction = () => {
         console.error(error)
         setDisabled(false)
       })
-  }
+  }, [web3])
 
   return (
     <Card>

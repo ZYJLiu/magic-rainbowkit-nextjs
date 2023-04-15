@@ -24,13 +24,21 @@ const UserInfo = ({ setAccount }: Props) => {
   const network = localStorage.getItem("network")
   const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
 
+  useEffect(() => {
+    refresh()
+  }, [web3])
+
+  useEffect(() => {
+    setBalance("...")
+  }, [magic])
+
   const disconnect = useCallback(async () => {
     if (magic) {
       await magic.wallet.disconnect()
       localStorage.removeItem("user")
       setAccount(null)
     }
-  }, [magic, setAccount])
+  }, [magic])
 
   const copy = useCallback(() => {
     if (publicAddress && copied === "Copy") {
@@ -40,7 +48,7 @@ const UserInfo = ({ setAccount }: Props) => {
         setCopied("Copy")
       }, 1000)
     }
-  }, [publicAddress, copied])
+  }, [])
 
   const getBalance = useCallback(async () => {
     if (publicAddress && web3) {
@@ -48,15 +56,15 @@ const UserInfo = ({ setAccount }: Props) => {
       setBalance(web3.utils.fromWei(balance))
       console.log("BALANCE: ", balance)
     }
-  }, [publicAddress, web3])
-
-  useEffect(() => {
-    getBalance()
   }, [web3])
 
-  useEffect(() => {
-    setBalance("...")
-  }, [magic])
+  const refresh = useCallback(async () => {
+    setIsRefreshing(true)
+    await getBalance()
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 500)
+  }, [])
 
   return (
     <Card>
@@ -89,17 +97,7 @@ const UserInfo = ({ setAccount }: Props) => {
               <Image className="loading" alt="loading" src={Loading} />
             </div>
           ) : (
-            <div
-              onClick={() => {
-                setIsRefreshing(true)
-                setTimeout(() => {
-                  setIsRefreshing(false)
-                }, 500)
-                getBalance()
-              }}
-            >
-              Refresh
-            </div>
+            <div onClick={refresh}>Refresh</div>
           )
         }
       />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
@@ -22,7 +22,7 @@ const TransferToken = () => {
     setToAddressError(false)
   }, [amount, toAddress])
 
-  const transferTestTokens = () => {
+  const transferTestTokens = useCallback(() => {
     if (!web3?.utils.isAddress(toAddress)) {
       return setToAddressError(true)
     }
@@ -45,7 +45,7 @@ const TransferToken = () => {
         setDisabled(false)
         console.error(error)
       })
-  }
+  }, [web3])
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
@@ -22,7 +22,7 @@ const NftTransfer = () => {
     setToAddressError(false)
   }, [tokenId, toAddress])
 
-  const mintNFT = () => {
+  const mintNFT = useCallback(() => {
     if (!web3?.utils.isAddress(toAddress)) {
       return setToAddressError(true)
     }
@@ -45,7 +45,7 @@ const NftTransfer = () => {
         setDisabled(false)
         console.error(error)
       })
-  }
+  }, [web3])
 
   return (
     <div>

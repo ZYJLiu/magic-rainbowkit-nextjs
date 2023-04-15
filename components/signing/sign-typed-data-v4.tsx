@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import {
   recoverTypedSignature,
   SignTypedDataVersion,
@@ -13,7 +13,7 @@ const SignTypedDataV4 = () => {
   const [disabled, setDisabled] = useState(false)
   const publicAddress = localStorage.getItem("user")
 
-  const signTypedDataV4 = async () => {
+  const signTypedDataV4 = useCallback(async () => {
     if (!magic) return
     try {
       setDisabled(true)
@@ -40,7 +40,7 @@ const SignTypedDataV4 = () => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [magic])
 
   return (
     <div>

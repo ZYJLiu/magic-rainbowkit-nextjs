@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
 import { useMagicContext } from "@/context/magic-context"
 import Image from "next/image"
@@ -11,7 +11,7 @@ const Disconnect = ({ setAccount }: Props) => {
   const { magic } = useMagicContext()
   const [disabled, setDisabled] = useState(false)
 
-  const disconnect = async () => {
+  const disconnect = useCallback(async () => {
     if (!magic) return
     try {
       setDisabled(true)
@@ -23,7 +23,7 @@ const Disconnect = ({ setAccount }: Props) => {
       setDisabled(false)
       console.error(error)
     }
-  }
+  }, [magic])
 
   return (
     <div className="wallet-method-container">
