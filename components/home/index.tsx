@@ -1,13 +1,8 @@
 import React from "react"
-// import TableOfContents from "../components/table-of-contents"
 import AppHeader from "../app-header"
 import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
-// import SigningMethods from "../components/signing"
-// import SendTransaction from "../components/send-transaction"
-// import Erc20Tokens from "../components/erc20-tokens"
-// import SmartContracts from "../components/contracts"
-// import NFTs from "../components/nfts"
+// import TableOfContents from "../table-of-contents"
 import Links from "../links"
 import Spacer from "../ui/spacer"
 import HomePageBackground from "public/main.svg"
@@ -30,13 +25,9 @@ export default function Home({ setAccount }: Props) {
       <Spacer size={120} />
       {/* <TableOfContents /> */}
       <div className="cards-container">
+        <Spacer size={285} />
         <Wallet setAccount={setAccount} />
         <WalletMethods setAccount={setAccount} />
-        {/* <SendTransaction /> */}
-        {/* <Erc20Tokens /> */}
-        {/* <NFTs /> */}
-        {/* <SmartContracts /> */}
-        {/* <SigningMethods /> */}
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />

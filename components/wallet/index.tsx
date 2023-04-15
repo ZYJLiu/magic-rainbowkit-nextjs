@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import Image from "next/image"
 import Divider from "../ui/divider"
 import Loading from "public/loading.svg"
 import Network from "../network"
@@ -6,18 +7,14 @@ import CardLabel from "../ui/card-label"
 import Card from "../ui/card"
 import CardHeader from "../ui/card-header"
 import { Networks } from "../../utils/networks"
-import Image from "next/image"
-
 import { useMagicContext } from "@/context/magic-context"
-import { useWeb3Instance } from "@/libs/web3"
 
 interface Props {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const UserInfo = ({ setAccount }: Props) => {
-  const { magic } = useMagicContext()
-  const web3 = useWeb3Instance()
+  const { magic, web3 } = useMagicContext()
 
   const [balance, setBalance] = useState("...")
   const [copied, setCopied] = useState("Copy")
@@ -27,15 +24,15 @@ const UserInfo = ({ setAccount }: Props) => {
   const network = localStorage.getItem("network")
   const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
 
-  const disconnect = async () => {
+  const disconnect = useCallback(async () => {
     if (magic) {
       await magic.wallet.disconnect()
       localStorage.removeItem("user")
       setAccount(null)
     }
-  }
+  }, [magic, setAccount])
 
-  const copy = () => {
+  const copy = useCallback(() => {
     if (publicAddress && copied === "Copy") {
       setCopied("Copied!")
       navigator.clipboard.writeText(publicAddress)
@@ -43,19 +40,23 @@ const UserInfo = ({ setAccount }: Props) => {
         setCopied("Copy")
       }, 1000)
     }
-  }
+  }, [publicAddress, copied])
 
-  const getBalance = async () => {
+  const getBalance = useCallback(async () => {
     if (publicAddress && web3) {
       const balance = await web3.eth.getBalance(publicAddress)
       setBalance(web3.utils.fromWei(balance))
       console.log("BALANCE: ", balance)
     }
-  }
+  }, [publicAddress, web3])
 
   useEffect(() => {
     getBalance()
   }, [web3])
+
+  useEffect(() => {
+    setBalance("...")
+  }, [magic])
 
   return (
     <Card>

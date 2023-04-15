@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Login from "../components/login"
 import Home from "../components/home"
-// import "./styles.css"
 
 export default function App() {
   const [account, setAccount] = useState<string | null>(null)
