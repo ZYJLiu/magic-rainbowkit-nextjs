@@ -4,6 +4,7 @@ import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
 import SigningMethods from "../signing"
 import SmartContracts from "../contracts"
+import NFTs from "../nfts"
 import Links from "../links"
 import Spacer from "../ui/spacer"
 import HomePageBackground from "public/main.svg"
@@ -30,6 +31,7 @@ export default function Home({ setAccount }: Props) {
         <WalletMethods setAccount={setAccount} />
         <SigningMethods />
         <SmartContracts />
+        <NFTs />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />
