@@ -5,25 +5,19 @@ import Network from "../network"
 import CardLabel from "../ui/card-label"
 import Card from "../ui/card"
 import CardHeader from "../ui/card-header"
-import { useMagic } from "../../libs/magic"
 import { Networks } from "../../utils/networks"
 import Image from "next/image"
 
-// import { web3 } from "../../libs/web3"
-import Web3 from "web3"
 import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Instance } from "@/libs/web3"
 
 interface Props {
   setAccount: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const UserInfo = ({ setAccount }: Props) => {
-  const { magic, selectedNetwork } = useMagicContext()
-  useMagic()
-  // console.log("MAGIC: ", magic)
-  // console.log("SELECTED: ", selectedNetwork)
-
-  const [web3, setWeb3] = useState<Web3>()
+  const { magic } = useMagicContext()
+  const web3 = useWeb3Instance()
 
   const [balance, setBalance] = useState("...")
   const [copied, setCopied] = useState("Copy")
@@ -32,13 +26,6 @@ const UserInfo = ({ setAccount }: Props) => {
   const publicAddress = localStorage.getItem("user")
   const network = localStorage.getItem("network")
   const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
-
-  useEffect(() => {
-    if (magic) {
-      setWeb3(new Web3((magic as any).rpcProvider))
-    }
-    // console.log("MAGIC: ", magic)
-  }, [magic])
 
   const disconnect = async () => {
     if (magic) {

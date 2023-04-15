@@ -2,7 +2,7 @@ import React from "react"
 // import TableOfContents from "../components/table-of-contents"
 import AppHeader from "../app-header"
 import Wallet from "../wallet"
-// import WalletMethods from "../components/wallet-methods"
+import WalletMethods from "../wallet-methods"
 // import SigningMethods from "../components/signing"
 // import SendTransaction from "../components/send-transaction"
 // import Erc20Tokens from "../components/erc20-tokens"
@@ -31,7 +31,7 @@ export default function Home({ setAccount }: Props) {
       {/* <TableOfContents /> */}
       <div className="cards-container">
         <Wallet setAccount={setAccount} />
-        {/* <WalletMethods setAccount={setAccount} /> */}
+        <WalletMethods setAccount={setAccount} />
         {/* <SendTransaction /> */}
         {/* <Erc20Tokens /> */}
         {/* <NFTs /> */}

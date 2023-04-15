@@ -3,8 +3,8 @@ import DownArrow from "public/down-arrow.svg"
 import Check from "public/check.svg"
 import { Networks } from "../../utils/networks"
 import Image from "next/image"
-import useLocalStorage from "../../utils/useLocalStorage"
 import { useMagicContext } from "@/context/magic-context"
+// import { useInitializeMagic } from "@/libs/magic"
 
 const Network = () => {
   const networkOptions = [
@@ -14,68 +14,52 @@ const Network = () => {
   ]
   const [isOpen, setIsOpen] = useState(false)
   const [network, setNetwork] = useState("")
-  const { setSelectedNetwork } = useMagicContext()
+  const { updateMagicInstance } = useMagicContext()
+  // const { setSelectedNetwork } = useMagicContext()
+  // const initializeMagic = useInitializeMagic()
 
   useEffect(() => {
-    setNetwork(localStorage.getItem("network") || Networks.Ethereum)
+    const initialNetwork = localStorage.getItem("network") || Networks.Ethereum
+    updateMagicInstance(initialNetwork as Networks)
+    setNetwork(initialNetwork as Networks)
   }, [])
 
   const handleNetworkSelected = (networkOption: Networks) => {
     if (networkOption !== network) {
       setNetwork(networkOption)
       localStorage.setItem("network", networkOption)
-      setSelectedNetwork(networkOption)
-      console.log("LOCAL: ", localStorage.getItem("network"))
-      // window.location.reload()
+      updateMagicInstance(networkOption)
+      // setSelectedNetwork(networkOption)
+      // initializeMagic(networkOption)
     }
   }
 
-  const ActiveNetwork = ({ network }: { network: string }) => {
-    return (
+  const toggleDropdown = () => setIsOpen(!isOpen)
+
+  return (
+    <div className="network-dropdown" onClick={toggleDropdown}>
       <div className="active-network">
         {network}
         <Image
           src={DownArrow}
-          // height="20px"
           alt="down-arrow"
           className={isOpen ? "rotate" : ""}
         />
       </div>
-    )
-  }
-
-  const NetworkDropdownOption = ({ network }: { network: Networks }) => {
-    return (
-      <div
-        className="network-dropdown-option"
-        onClick={() => {
-          handleNetworkSelected(network)
-        }}
-      >
-        <Image
-          src={Check}
-          height="15px"
-          alt="check"
-          style={{ marginRight: "10px" }}
-        />
-        {network}
-      </div>
-    )
-  }
-
-  return (
-    <div className="network-dropdown" onClick={() => setIsOpen(!isOpen)}>
-      <ActiveNetwork network={network} />
-      {isOpen ? (
+      {isOpen && (
         <div className="network-options">
           {networkOptions.map((networkOption) => (
-            <NetworkDropdownOption
+            <div
               key={networkOption}
-              network={networkOption}
-            />
+              className="network-dropdown-option"
+              onClick={() => handleNetworkSelected(networkOption)}
+            >
+              <Image src={Check} alt="check" style={{ marginRight: "10px" }} />
+              {networkOption}
+            </div>
           ))}
         </div>
-      ) : null}
+      )}
     </div>
   )
 }

@@ -1,6 +1,16 @@
+import { useMemo } from "react"
 import Web3 from "web3"
-import { useMagic } from "./magic"
+import { useMagicContext } from "../context/magic-context"
 
-const magic = useMagic()
+export const useWeb3Instance = (): Web3 | null => {
+  const { magic } = useMagicContext()
 
-export const web3 = magic ? new Web3((magic as any).rpcProvider) : null
+  const web3Instance = useMemo(() => {
+    if (magic) {
+      return new Web3((magic as any).rpcProvider)
+    }
+    return null
+  }, [magic])
+
+  return web3Instance
+}
