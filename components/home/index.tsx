@@ -1,5 +1,5 @@
 import React from "react"
-// import TableOfContents from "../table-of-contents"
+import TableOfContents from "../table-of-contents"
 import AppHeader from "../app-header"
 import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
@@ -27,15 +27,15 @@ export default function Home({ setAccount }: Props) {
       <Spacer size={32} />
       <Links />
       <Spacer size={120} />
+      <TableOfContents />
       <div className="cards-container">
-        <Spacer size={285} />
         <Wallet setAccount={setAccount} />
         <WalletMethods setAccount={setAccount} />
-        <SigningMethods />
-        <SmartContracts />
-        <NFTs />
-        <Erc20Tokens />
         <SendTransaction />
+        <Erc20Tokens />
+        <NFTs />
+        <SmartContracts />
+        <SigningMethods />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />
