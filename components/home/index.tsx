@@ -2,7 +2,7 @@ import React from "react"
 import AppHeader from "../app-header"
 import Wallet from "../wallet"
 import WalletMethods from "../wallet-methods"
-// import TableOfContents from "../table-of-contents"
+import SigningMethods from "../signing"
 import Links from "../links"
 import Spacer from "../ui/spacer"
 import HomePageBackground from "public/main.svg"
@@ -23,11 +23,11 @@ export default function Home({ setAccount }: Props) {
       <Spacer size={32} />
       <Links />
       <Spacer size={120} />
-      {/* <TableOfContents /> */}
       <div className="cards-container">
         <Spacer size={285} />
         <Wallet setAccount={setAccount} />
         <WalletMethods setAccount={setAccount} />
+        <SigningMethods />
         <Spacer size={15} />
         <Links dark />
         <Spacer size={30} />
