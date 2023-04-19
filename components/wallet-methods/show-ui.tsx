@@ -2,11 +2,13 @@ import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
 import ErrorText from "../ui/error"
 import Spacer from "../ui/spacer"
-import { useMagicContext } from "@/context/magic-context"
 import Image from "next/image"
+import { useAccount } from "wagmi"
 
 const ShowUI = () => {
-  const { magic } = useMagicContext()
+  const { connector: activeConnector } = useAccount()
+  //@ts-ignore
+  const magic = activeConnector.magic
   const [disabled, setDisabled] = useState(false)
   const [showUIError, setShowUIError] = useState(false)
 

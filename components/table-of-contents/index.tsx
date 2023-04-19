@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import Web3 from "web3"
 
 function useHeadingObserver() {
   const observer = useRef()
@@ -23,7 +24,11 @@ function useHeadingObserver() {
   return { activeId }
 }
 
-const TableOfContents = () => {
+interface TableOfContentsProps {
+  web3: Web3
+}
+
+const TableOfContents: React.FC<TableOfContentsProps> = ({ web3 }) => {
   const [isBottomOfPage, setIsBottomOfPage] = useState(false)
   const [headings, setHeadings] = useState<any>([])
   const { activeId } = useHeadingObserver()
@@ -51,7 +56,7 @@ const TableOfContents = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll)
     }
-  }, [])
+  }, [web3])
 
   return (
     <nav className="table-of-contents">

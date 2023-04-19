@@ -3,29 +3,44 @@ import DownArrow from "public/down-arrow.svg"
 import Check from "public/check.svg"
 import { Networks } from "../../utils/networks"
 import Image from "next/image"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useNetwork, useSwitchNetwork } from "wagmi"
+
+type ChainIdToNameType = { [key: number]: Networks }
 
 const Network = () => {
-  const networkOptions = [
-    Networks.Ethereum,
-    Networks.Polygon,
-    Networks.Optimism,
-  ]
+  const networkChainIds = {
+    [Networks.Ethereum]: 5,
+    [Networks.Polygon]: 80001,
+    [Networks.Optimism]: 420,
+  }
+
+  const chainIdToName = Object.entries(
+    networkChainIds
+  ).reduce<ChainIdToNameType>((acc, [key, value]) => {
+    acc[value] = key as Networks
+    return acc
+  }, {})
+
   const [isOpen, setIsOpen] = useState(false)
-  const { selectedNetwork, updateMagicInstance } = useMagicContext()
+  const { chain } = useNetwork()
+  const { switchNetwork } = useSwitchNetwork()
 
   const handleNetworkSelected = useCallback(
     (networkOption: Networks) => {
-      if (networkOption !== selectedNetwork) {
-        localStorage.setItem("network", networkOption)
-        updateMagicInstance(networkOption)
+      const selectedChainId = networkChainIds[networkOption]
+
+      if (selectedChainId && selectedChainId !== chain?.id) {
+        switchNetwork?.(selectedChainId)
         console.log("SELECTED NETWORK: ", networkOption)
       }
     },
-    [selectedNetwork]
+    [chain, switchNetwork]
   )
 
   const toggleDropdown = () => setIsOpen(!isOpen)
+  const selectedChainId = chain?.id
+  const selectedNetwork = chainIdToName[selectedChainId!]
 
   return (
     <div className="network-dropdown" onClick={toggleDropdown}>
@@ -39,7 +54,7 @@ const Network = () => {
       </div>
       {isOpen && (
         <div className="network-options">
-          {networkOptions.map((networkOption) => (
+          {Object.values(Networks).map((networkOption) => (
             <div
               key={networkOption}
               className="network-dropdown-option"

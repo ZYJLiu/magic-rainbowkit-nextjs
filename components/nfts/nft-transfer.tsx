@@ -4,17 +4,18 @@ import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
 import ErrorText from "../ui/error"
 import { getNftContract } from "../../utils/contracts"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const NftTransfer = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [tokenId, setTokenId] = useState("")
   const [toAddress, setToAddress] = useState("")
   const [disabled, setDisabled] = useState(!tokenId || !toAddress)
   const [toAddressError, setToAddressError] = useState(false)
   const [tokenIdError, setTokenIdError] = useState(false)
   const contract = getNftContract(web3!)
-  const publicAddress = localStorage.getItem("user")
 
   useEffect(() => {
     setDisabled(!toAddress || !tokenId)
@@ -31,8 +32,8 @@ const NftTransfer = () => {
     }
     setDisabled(true)
     contract.methods
-      .transferFrom(publicAddress, toAddress, tokenId)
-      .send({ from: publicAddress })
+      .transferFrom(address, toAddress, tokenId)
+      .send({ from: address })
       .on("transactionHash", (hash: string) => {
         console.log("Transaction hash:", hash)
       })

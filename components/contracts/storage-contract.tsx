@@ -5,15 +5,16 @@ import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
 import ErrorText from "../ui/error"
 import { getStorageContract } from "../../utils/contracts"
-import { useMagicContext } from "@/context/magic-context"
+import { useAccount } from "wagmi"
+import { useWeb3Context } from "@/context/web3-context"
 
 const StorageContract = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [newNumber, setNewNumber] = useState("")
   const [storedNumber, setStoredNumber] = useState("")
   const [disabled, setDisabled] = useState(!newNumber)
   const [newNumberError, setNewNumberError] = useState(false)
-  const publicAddress = localStorage.getItem("user")
   const contract = getStorageContract(web3!)
 
   useEffect(() => {
@@ -23,19 +24,19 @@ const StorageContract = () => {
 
   useEffect(() => {
     getStoredNumber()
-  }, [web3])
+  }, [contract])
 
-  const getStoredNumber = useCallback(async () => {
+  const getStoredNumber = async () => {
     const number = await contract.methods.number().call()
     setStoredNumber(number)
-  }, [web3])
+  }
 
-  const updateNumber = useCallback(() => {
+  const updateNumber = () => {
     if (isNaN(Number(newNumber))) return setNewNumberError(true)
     setDisabled(true)
     contract.methods
       .store(Number(newNumber))
-      .send({ from: publicAddress })
+      .send({ from: address })
       .on("transactionHash", (hash: string) => {
         console.log("Transaction hash:", hash)
       })
@@ -49,7 +50,7 @@ const StorageContract = () => {
         console.error(error)
         setDisabled(false)
       })
-  }, [web3])
+  }
 
   return (
     <div>

@@ -7,7 +7,8 @@ import nftImageThree from "public/nft-three.svg"
 import Spacer from "../ui/spacer"
 import CardLabel from "../ui/card-label"
 import { getNftContract } from "../../utils/contracts"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const NFTDisplay = ({ id, name }: { id: string; name: string }) => {
   const getNftImage = () => {
@@ -41,11 +42,11 @@ interface NftDataType {
 }
 
 const MyNfts = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [nftData, setNftData] = useState<NftDataType[] | undefined>()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const contract = getNftContract(web3!)
-  const publicAddress = localStorage.getItem("user")
 
   useEffect(() => {
     refresh()
@@ -70,9 +71,7 @@ const MyNfts = () => {
   const getOwnedNfts = useCallback(async () => {
     if (!isRefreshing) {
       try {
-        const nftIds = await contract.methods
-          .getNftsByAddress(publicAddress)
-          .call()
+        const nftIds = await contract.methods.getNftsByAddress(address).call()
         const tokenURIPromises = nftIds.map(async (nftId: string) => {
           return await contract.methods.tokenURI(nftId).call()
         })

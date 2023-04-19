@@ -7,22 +7,20 @@ import CardLabel from "../ui/card-label"
 import Card from "../ui/card"
 import CardHeader from "../ui/card-header"
 import { Networks } from "../../utils/networks"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount, useNetwork } from "wagmi"
+import { disconnect } from "@wagmi/core"
 
-interface Props {
-  setAccount: React.Dispatch<React.SetStateAction<string | null>>
-}
-
-const UserInfo = ({ setAccount }: Props) => {
-  const { magic, web3 } = useMagicContext()
+const UserInfo = () => {
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
 
   const [balance, setBalance] = useState("...")
   const [copied, setCopied] = useState("Copy")
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const publicAddress = localStorage.getItem("user")
-  const network = localStorage.getItem("network")
-  const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
+  const tokenSymbol = chain?.id === 80001 ? "MATIC" : "ETH"
 
   useEffect(() => {
     refresh()
@@ -30,20 +28,16 @@ const UserInfo = ({ setAccount }: Props) => {
 
   useEffect(() => {
     setBalance("...")
-  }, [magic])
+  }, [web3])
 
-  const disconnect = useCallback(async () => {
-    if (magic) {
-      await magic.wallet.disconnect()
-      localStorage.removeItem("user")
-      setAccount(null)
-    }
-  }, [magic])
+  const handleDisconnect = async () => {
+    await disconnect()
+  }
 
   const copy = useCallback(() => {
-    if (publicAddress && copied === "Copy") {
+    if (address && copied === "Copy") {
       setCopied("Copied!")
-      navigator.clipboard.writeText(publicAddress)
+      navigator.clipboard.writeText(address)
       setTimeout(() => {
         setCopied("Copy")
       }, 1000)
@@ -51,8 +45,8 @@ const UserInfo = ({ setAccount }: Props) => {
   }, [])
 
   const getBalance = useCallback(async () => {
-    if (publicAddress && web3) {
-      const balance = await web3.eth.getBalance(publicAddress)
+    if (address && web3) {
+      const balance = await web3.eth.getBalance(address)
       setBalance(web3.utils.fromWei(balance))
       console.log("BALANCE: ", balance)
     }
@@ -71,7 +65,7 @@ const UserInfo = ({ setAccount }: Props) => {
       <CardHeader id="wallet">Wallet</CardHeader>
       <CardLabel
         leftHeader="Status"
-        rightAction={<div onClick={disconnect}>Disconnect</div>}
+        rightAction={<div onClick={handleDisconnect}>Disconnect</div>}
         isDisconnect
       />
       <div className="flex-row">
@@ -86,7 +80,7 @@ const UserInfo = ({ setAccount }: Props) => {
         leftHeader="Address"
         rightAction={<div onClick={copy}>{copied}</div>}
       />
-      <div className="code">{publicAddress}</div>
+      <div className="code">{address}</div>
       <Divider />
       <CardLabel
         style={{ height: "20px" }}

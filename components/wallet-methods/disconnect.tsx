@@ -1,14 +1,15 @@
 import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
-import { useMagicContext } from "@/context/magic-context"
 import Image from "next/image"
+import { useAccount } from "wagmi"
 
-interface Props {
-  setAccount: React.Dispatch<React.SetStateAction<string | null>>
-}
+// this won't work, connected via wagmi
+const Disconnect = () => {
+  const { connector: activeConnector } = useAccount()
+  //@ts-ignore
+  const magic = activeConnector.magic
+  console.log(magic)
 
-const Disconnect = ({ setAccount }: Props) => {
-  const { magic } = useMagicContext()
   const [disabled, setDisabled] = useState(false)
 
   const disconnect = useCallback(async () => {
@@ -16,9 +17,7 @@ const Disconnect = ({ setAccount }: Props) => {
     try {
       setDisabled(true)
       await magic.wallet.disconnect()
-      localStorage.removeItem("user")
       setDisabled(false)
-      setAccount(null)
     } catch (error) {
       setDisabled(false)
       console.error(error)

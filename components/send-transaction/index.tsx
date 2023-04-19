@@ -11,19 +11,22 @@ import TransactionHistory from "../ui/transaction-history"
 import ErrorText from "../ui/error"
 import { Networks } from "../../utils/networks"
 import { getFaucetUrl } from "../../utils/faucet"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount, useNetwork } from "wagmi"
 
 const SendTransaction = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
+
   const [toAddress, setToAddress] = useState("")
   const [amount, setAmount] = useState("")
   const [disabled, setDisabled] = useState(!toAddress || !amount)
   const [hash, setHash] = useState("")
   const [toAddressError, setToAddressError] = useState(false)
   const [amountError, setAmountError] = useState(false)
-  const publicAddress = localStorage.getItem("user")
-  const network = localStorage.getItem("network")
-  const tokenSymbol = network === Networks.Polygon ? "MATIC" : "ETH"
+
+  const tokenSymbol = chain?.id === 80001 ? "MATIC" : "ETH"
 
   useEffect(() => {
     setDisabled(!toAddress || !amount)
@@ -40,7 +43,7 @@ const SendTransaction = () => {
     }
     setDisabled(true)
     const txnParams = {
-      from: publicAddress,
+      from: address,
       to: toAddress,
       value: web3.utils.toWei(amount, "ether"),
       gas: 21000,

@@ -3,14 +3,15 @@ import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
 import { getNftContract } from "../../utils/contracts"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const MintNft = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [name, setName] = useState("")
   const [disabled, setDisabled] = useState(!name)
   const contract = getNftContract(web3!)
-  const publicAddress = localStorage.getItem("user")
 
   useEffect(() => {
     setDisabled(!name)
@@ -21,11 +22,11 @@ const MintNft = () => {
       setDisabled(true)
       const gas = await contract.methods
         .mint(name)
-        .estimateGas({ from: publicAddress })
+        .estimateGas({ from: address })
       contract.methods
         .mint(name)
         .send({
-          from: publicAddress,
+          from: address,
           gas,
         })
         .on("transactionHash", (hash: string) => {

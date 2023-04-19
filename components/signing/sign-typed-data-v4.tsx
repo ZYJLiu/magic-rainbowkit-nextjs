@@ -6,18 +6,19 @@ import {
 import FormButton from "../ui/form-button"
 import CardLabel from "../ui/card-label"
 import { signTypedDataV4Payload } from "../../utils/signTypedData-payload"
-import { useMagicContext } from "@/context/magic-context"
+import { useAccount } from "wagmi"
 
 const SignTypedDataV4 = () => {
-  const { magic } = useMagicContext()
   const [disabled, setDisabled] = useState(false)
-  const publicAddress = localStorage.getItem("user")
+  const { address, connector: activeConnector } = useAccount()
+  //@ts-ignore
+  const magic = activeConnector.magic
 
   const signTypedDataV4 = useCallback(async () => {
     if (!magic) return
     try {
       setDisabled(true)
-      const params = [publicAddress, signTypedDataV4Payload]
+      const params = [address, signTypedDataV4Payload]
       const method = "eth_signTypedData_v4"
       const signature = await magic.rpcProvider.request({
         method,
@@ -30,8 +31,7 @@ const SignTypedDataV4 = () => {
         version: SignTypedDataVersion.V4,
       })
       console.log(
-        recoveredAddress.toLocaleLowerCase() ===
-          publicAddress?.toLocaleLowerCase()
+        recoveredAddress.toLocaleLowerCase() === address?.toLocaleLowerCase()
           ? "Signing success!"
           : "Signing failed!"
       )

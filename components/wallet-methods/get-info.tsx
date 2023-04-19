@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from "react"
 import Loading from "public/loading.svg"
 import Toast from "../ui/toast"
-import { useMagicContext } from "@/context/magic-context"
+import { useAccount } from "wagmi"
 import Image from "next/image"
 
 const GetWalletInfo = () => {
-  const { magic } = useMagicContext()
+  const { connector: activeConnector } = useAccount()
+  //@ts-ignore
+  const magic = activeConnector?.magic
+  console.log(magic)
   const [disabled, setDisabled] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [walletType, setWalletType] = useState("")

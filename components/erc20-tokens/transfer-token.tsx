@@ -4,16 +4,17 @@ import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
 import { getTestTokenContract } from "../../utils/contracts"
 import ErrorText from "../ui/error"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const TransferToken = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [toAddress, setToAddress] = useState("")
   const [amount, setAmount] = useState("")
   const [disabled, setDisabled] = useState(!toAddress || !amount)
   const [toAddressError, setToAddressError] = useState(false)
   const [amountError, setAmountError] = useState(false)
-  const publicAddress = localStorage.getItem("user")
   const contract = getTestTokenContract(web3!)
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const TransferToken = () => {
     setDisabled(true)
     contract.methods
       .transfer(toAddress, web3.utils.toWei(amount))
-      .send({ from: publicAddress })
+      .send({ from: address })
       .on("transactionHash", (hash: string) => {
         console.log("Transaction hash:", hash)
       })
@@ -45,7 +46,7 @@ const TransferToken = () => {
         setDisabled(false)
         console.error(error)
       })
-  }, [web3])
+  }, [web3, amount])
 
   return (
     <div>

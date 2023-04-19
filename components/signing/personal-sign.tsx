@@ -4,12 +4,12 @@ import { recoverPersonalSignature } from "@metamask/eth-sig-util"
 import FormButton from "../ui/form-button"
 import FormInput from "../ui/form-input"
 import CardLabel from "../ui/card-label"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const PersonalSign = () => {
-  const { web3 } = useMagicContext()
-  window.Buffer = window.Buffer || Buffer
-  const publicAddress = localStorage.getItem("user")
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [message, setMessage] = useState("")
   const [disabled, setDisabled] = useState(!message)
 
@@ -19,21 +19,16 @@ const PersonalSign = () => {
 
   const personalSign = useCallback(async () => {
     try {
-      if (publicAddress && web3) {
+      if (address && web3) {
         setDisabled(true)
-        const signedMessage = await web3.eth.personal.sign(
-          message,
-          publicAddress,
-          ""
-        )
+        const signedMessage = await web3.eth.personal.sign(message, address, "")
         console.log("signedMessage:", signedMessage)
         const recoveredAddress = recoverPersonalSignature({
           data: message,
           signature: signedMessage,
         })
         console.log(
-          recoveredAddress.toLocaleLowerCase() ===
-            publicAddress?.toLocaleLowerCase()
+          recoveredAddress.toLocaleLowerCase() === address?.toLocaleLowerCase()
             ? "Signing success!"
             : "Signing failed!"
         )

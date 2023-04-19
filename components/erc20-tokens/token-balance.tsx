@@ -3,13 +3,14 @@ import Image from "next/image"
 import Loading from "public/loading.svg"
 import CardLabel from "../ui/card-label"
 import { getTestTokenContract } from "../../utils/contracts"
-import { useMagicContext } from "@/context/magic-context"
+import { useWeb3Context } from "@/context/web3-context"
+import { useAccount } from "wagmi"
 
 const TokenBalance = () => {
-  const { web3 } = useMagicContext()
+  const { web3 } = useWeb3Context()
+  const { address } = useAccount()
   const [balance, setBalance] = useState("0")
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const publicAddress = localStorage.getItem("user")
   const contract = getTestTokenContract(web3!)
 
   useEffect(() => {
@@ -18,7 +19,7 @@ const TokenBalance = () => {
 
   const getTestTokenBalance = useCallback(async () => {
     if (!isRefreshing && web3) {
-      const balance = await contract.methods.balanceOf(publicAddress).call()
+      const balance = await contract.methods.balanceOf(address).call()
       setBalance(web3.utils.fromWei(balance))
     }
   }, [web3])
