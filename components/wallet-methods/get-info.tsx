@@ -8,7 +8,7 @@ const GetWalletInfo = () => {
   const { connector: activeConnector } = useAccount()
   //@ts-ignore
   const magic = activeConnector?.magic
-  console.log(magic)
+  // console.log(magic)
   const [disabled, setDisabled] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [walletType, setWalletType] = useState("")

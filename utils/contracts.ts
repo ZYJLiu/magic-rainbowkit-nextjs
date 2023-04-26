@@ -18,7 +18,7 @@ const getStorageContractAddress = () => {
 
 export const getStorageContract = (web3: Web3) => {
   const contractAddress = getStorageContractAddress()
-  console.log("contractAddress", contractAddress)
+  // console.log("contractAddress", contractAddress)
   return new web3.eth.Contract(storageContractAbi, contractAddress)
 }
 

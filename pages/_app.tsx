@@ -12,6 +12,7 @@ import { createClient, configureChains, WagmiConfig } from "wagmi"
 import { goerli, optimismGoerli, polygonMumbai } from "wagmi/chains"
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc"
 import Web3Provider from "@/context/web3-context"
+import { useEffect } from "react"
 
 type ChainIdToRpcUrl = {
   [key: number]: string
@@ -61,13 +62,16 @@ const connectors = connectorsForWallets([
 console.log(chains[0])
 
 const wagmiClient = createClient({
-  autoConnect: true, // autoconnect not working correctly with Magic Connect
+  autoConnect: false, // autoconnect not working correctly with Magic Connect
   connectors,
   provider,
   webSocketProvider,
 })
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    wagmiClient.autoConnect() // workaround for autoconnect causing hydration error
+  }, [])
   return (
     <Web3Provider>
       <WagmiConfig client={wagmiClient}>

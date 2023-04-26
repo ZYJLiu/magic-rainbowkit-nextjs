@@ -8,7 +8,7 @@ const Disconnect = () => {
   const { connector: activeConnector } = useAccount()
   //@ts-ignore
   const magic = activeConnector.magic
-  console.log(magic)
+  // console.log(magic)
 
   const [disabled, setDisabled] = useState(false)
 
